@@ -13,4 +13,5 @@ dans le fichier sql :
   * ajouter les triggers nécéssaire pour gérer l'héritage : 
   ajout_out, ajout_mach, ajout_veh, modif_out, modif_mach, modif_veh, suppr_out, suppr_mach, suppr_veh.
 - dans la table Materiels :
-  * ajouter un trigger qui 
+  * ajouter des triggers qui met à jour qte_stock selon si un matériel est loué 
+  et lorsque qu'on en récupère suite à un contrat en fin de vie.
