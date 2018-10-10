@@ -53,24 +53,20 @@ CREATE TABLE Categories(
  
 CREATE TABLE machines(
     code_cat INT(3) AUTO_INCREMENT NOT NULL,
-    nom_machine VARCHAR(30) NOT NULL,
-    type_machine VARCHAR(30) NOT NULL,
+    secteur VARCHAR(30) NOT NULL,
     libelle VARCHAR(25),
     PRIMARY KEY (code_cat)
 );
  
 CREATE TABLE outillage(
     code_cat INT(3) AUTO_INCREMENT NOT NULL,
-    nom_outil VARCHAR(30) NOT NULL,
-    type_outil VARCHAR(30) NOT NULL,
     libelle VARCHAR(25),
     PRIMARY KEY (code_cat)
 );
  
 CREATE TABLE vehicules(
     code_cat INT(3) AUTO_INCREMENT NOT NULL,
-    nom_vehicule VARCHAR(30) NOT NULL,
-    type_vehicule VARCHAR(30) NOT NULL,
+    usage VARCHAR(30) NOT NULL,
     matricule VARCHAR(30) NOT NULL,
     libelle VARCHAR(25),
     PRIMARY KEY (code_cat)
@@ -97,8 +93,6 @@ CREATE TABLE Interventions(
     tarif_inter FLOAT(6,2) NOT NULL,
     PRIMARY KEY (ref_inter)
 );
- 
-
  
 CREATE TABLE Techniciens(
     ref_tech INT(3) auto_increment NOT NULL,    
