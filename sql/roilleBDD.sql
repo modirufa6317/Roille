@@ -94,8 +94,6 @@ CREATE TABLE Interventions(
     PRIMARY KEY (ref_inter)
 );
  
-
- 
 CREATE TABLE Techniciens(
     ref_tech INT(3) auto_increment NOT NULL,    
     nom_tech VARCHAR(25) NOT NULL,
