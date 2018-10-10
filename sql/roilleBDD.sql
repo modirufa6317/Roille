@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS Roille_;
+DROP DATABASE IF EXISTS Roille;
  
-CREATE DATABASE Roille_;
+CREATE DATABASE Roille;
  
-USE Roille_;
+USE Roille;
  
 CREATE TABLE Agences
 (
@@ -28,10 +28,9 @@ CREATE TABLE Clients (
     email_cli VARCHAR(30) NOT NULL,
     ville_cli VARCHAR(25) NOT NULL,
     tel_cli VARCHAR(10) NOT NULL,
-    PRIMARY KEY(ref_cli)
+    PRIMARY KEY(ref_cli),
+    FOREIGN KEY(code_ag) REFERENCES Agences(code_ag)
 );
- 
-ALTER TABLE Clients ADD CONSTRAINT fk_cli_code_ag FOREIGN KEY (code_ag) REFERENCES Agences (code_ag);
   
 CREATE TABLE Commandes_contrats(
     ref_comct INT(3) AUTO_INCREMENT NOT NULL,
@@ -42,11 +41,10 @@ CREATE TABLE Commandes_contrats(
     montant_tva FLOAT(6,2) NOT NULL,
     montant_ht FLOAT(8,2) NOT NULL,
     montant_ttc FLOAT(8,2) NOT NULL,
-    PRIMARY KEY (ref_comct)
+    PRIMARY KEY (ref_comct),
+    FOREIGN KEY (ref_cli) REFERENCES Clients(ref_cli)
 );
- 
-ALTER TABLE Commandes_contrats ADD CONSTRAINT fk_cmt_ref_cli FOREIGN KEY (ref_cli) REFERENCES Clients(ref_cli);
- 
+  
 CREATE TABLE Categories(
     code_cat INT(3) AUTO_INCREMENT NOT NULL,
     libelle VARCHAR(25),
@@ -55,34 +53,24 @@ CREATE TABLE Categories(
  
 CREATE TABLE machines(
     code_cat INT(3) AUTO_INCREMENT NOT NULL,
-    nom_machine VARCHAR(30) NOT NULL,
-    type_machine VARCHAR(30) NOT NULL,
+    secteur VARCHAR(30) NOT NULL,
     libelle VARCHAR(25),
     PRIMARY KEY (code_cat)
 );
- 
-ALTER TABLE machines ADD CONSTRAINT fk_mac_code_cat FOREIGN KEY (code_cat) REFERENCES Categories(code_cat);
  
 CREATE TABLE outillage(
     code_cat INT(3) AUTO_INCREMENT NOT NULL,
-    nom_outil VARCHAR(30) NOT NULL,
-    type_outil VARCHAR(30) NOT NULL,
     libelle VARCHAR(25),
     PRIMARY KEY (code_cat)
 );
  
-ALTER TABLE outillage ADD CONSTRAINT fk_out_code_cat FOREIGN KEY (code_cat) REFERENCES Categories(code_cat);
- 
 CREATE TABLE vehicules(
     code_cat INT(3) AUTO_INCREMENT NOT NULL,
-    nom_vehicule VARCHAR(30) NOT NULL,
-    type_vehicule VARCHAR(30) NOT NULL,
+    usage VARCHAR(30) NOT NULL,
     matricule VARCHAR(30) NOT NULL,
     libelle VARCHAR(25),
     PRIMARY KEY (code_cat)
 );
- 
-ALTER TABLE vehicules ADD CONSTRAINT fk_veh_code_cat FOREIGN KEY (code_cat) REFERENCES Categories(code_cat);
  
 CREATE TABLE Materiels(
     ref_mat INT(3) AUTO_INCREMENT NOT NULL,
@@ -93,10 +81,9 @@ CREATE TABLE Materiels(
     desc_mat TEXT NOT NULL,
     qte_stock INT(6) NOT NULL,
     caution FLOAT(6,2) NOT NULL,
-    PRIMARY KEY (ref_mat)
+    PRIMARY KEY (ref_mat),
+    FOREIGN KEY(code_cat) REFERENCES Categories(code_cat)
 );
- 
-ALTER TABLE Materiels ADD CONSTRAINT fk_mat_code_cat FOREIGN KEY (code_cat) REFERENCES Categories(code_cat);
  
 CREATE TABLE Interventions(
     ref_inter INT(3) auto_increment NOT NULL,
@@ -106,8 +93,6 @@ CREATE TABLE Interventions(
     tarif_inter FLOAT(6,2) NOT NULL,
     PRIMARY KEY (ref_inter)
 );
- 
-
  
 CREATE TABLE Techniciens(
     ref_tech INT(3) auto_increment NOT NULL,    
@@ -121,11 +106,10 @@ CREATE TABLE Paniers(
     ref_comct INT(3) NOT NULL,
     ref_mat INT(3) NOT NULL,
     qte_mat INT(4) NOT NULL,
-    PRIMARY KEY (ref_comct,ref_mat)
+    PRIMARY KEY (ref_comct,ref_mat),
+    FOREIGN KEY (ref_mat) REFERENCES Materiels(ref_mat),
+    FOREIGN KEY (ref_comct) REFERENCES Commandes_contrats(ref_comct)
 );
- 
-ALTER TABLE Paniers ADD CONSTRAINT fk_pan_ref_mat FOREIGN KEY (ref_mat) REFERENCES Materiels(ref_mat);
-ALTER TABLE Paniers ADD CONSTRAINT fk_pan_ref_comct FOREIGN KEY (ref_comct) REFERENCES Commandes_contrats(ref_comct);
  
 CREATE TABLE Plannings(
     ref_mat INT(3) NOT NULL,
@@ -133,10 +117,8 @@ CREATE TABLE Plannings(
     ref_inter INT(3) NOT NULL,
     date_deb DATE NOT NULL,
     date_fin DATE,
-    PRIMARY KEY (ref_mat,ref_tech,ref_inter,date_deb)   
+    PRIMARY KEY (ref_mat,ref_tech,ref_inter,date_deb),
+    FOREIGN KEY (ref_mat) REFERENCES Materiels(ref_mat),
+    FOREIGN KEY (ref_tech) REFERENCES Techniciens(ref_tech),
+    FOREIGN KEY (ref_inter) REFERENCES Interventions(ref_inter)
 );
- 
-
-ALTER TABLE Plannings ADD CONSTRAINT fk_pla_ref_mat FOREIGN KEY (ref_mat) REFERENCES Materiels(ref_mat);
-ALTER TABLE Plannings ADD CONSTRAINT fk_pla_ref_tech FOREIGN KEY (ref_tech) REFERENCES Techniciens(ref_tech);
-ALTER TABLE Plannings ADD CONSTRAINT fk_pla_ref_inter FOREIGN KEY (ref_inter) REFERENCES Interventions(ref_inter);
