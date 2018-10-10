@@ -66,7 +66,7 @@ CREATE TABLE outillage(
  
 CREATE TABLE vehicules(
     code_cat INT(3) AUTO_INCREMENT NOT NULL,
-    usage VARCHAR(30) NOT NULL,
+    usagev VARCHAR(30) NOT NULL,
     matricule VARCHAR(30) NOT NULL,
     libelle VARCHAR(25),
     PRIMARY KEY (code_cat)
@@ -122,3 +122,18 @@ CREATE TABLE Plannings(
     FOREIGN KEY (ref_tech) REFERENCES Techniciens(ref_tech),
     FOREIGN KEY (ref_inter) REFERENCES Interventions(ref_inter)
 );
+/*
+DELIMITER //
+
+CREATE TRIGGER MATERIEL_OUT
+AFTER INSERT ON Commandes_contrats
+FOR EACH ROW
+BEGIN
+alter table Materiels
+update old.qte_stock=new.qte_stock-qte_mat
+where Paniers.ref_mat=Materiels.ref_mat
+
+END //
+
+DELIMITER ;
+*/
