@@ -129,9 +129,9 @@ CREATE TRIGGER MATERIEL_OUT
 AFTER INSERT ON Paniers
 FOR EACH ROW
 BEGIN
-select * from Paniers P, Materiels M
-where P.ref_mat=M.ref_mat;
-set qte_stock=qte_stock-new.qte_mat;
+update Materiels
+set qte_stock=qte_stock-new.qte_mat
+where ref_mat=new.ref_mat;
 END //
 
 DELIMITER ;
