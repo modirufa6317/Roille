@@ -151,9 +151,27 @@ insert into Commandes_contrats(ref_comct, ref_cli) values
 insert into Categories(code_cat) values
 	(1);
 	
+insert into machines(code_cat) values
+	(1);
+
+insert into vehicules(code_cat) values
+	(1);
+
+insert into outillage(code_cat) values
+	(1);
+	
 insert into Materiels(ref_mat, code_cat) values
 	(1, 1); 
 
 insert into Paniers(ref_mat, ref_comct) values
 	(1, 1);
+
+insert into Techniciens(ref_tech) values
+	(1);
+
+insert into Interventions(ref_inter) values
+	(1);
+
+insert into Plannings(ref_mat, ref_tech, ref_inter) values
+	(1, 1, 1);
 
