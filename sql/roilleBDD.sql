@@ -122,18 +122,17 @@ CREATE TABLE Plannings(
     FOREIGN KEY (ref_tech) REFERENCES Techniciens(ref_tech),
     FOREIGN KEY (ref_inter) REFERENCES Interventions(ref_inter)
 );
-/*
+
 DELIMITER //
 
 CREATE TRIGGER MATERIEL_OUT
-AFTER INSERT ON Commandes_contrats
+AFTER INSERT ON Paniers
 FOR EACH ROW
 BEGIN
-alter table Materiels
-update old.qte_stock=new.qte_stock-qte_mat
-where Paniers.ref_mat=Materiels.ref_mat
-
+select * from Paniers P, Materiels M
+where P.ref_mat=M.ref_mat;
+set qte_stock=qte_stock-new.qte_mat;
 END //
 
 DELIMITER ;
-*/
+
