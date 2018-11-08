@@ -123,10 +123,10 @@ CREATE TABLE Plannings(
     FOREIGN KEY (ref_inter) REFERENCES Interventions(ref_inter)
 );
 
--- création des triggers
-DELIMITER //
 
-drop trigger if exists MATERIEL_OUT//
+-- création des triggers
+drop trigger if exists MATERIEL_OUT;
+DELIMITER //
 CREATE TRIGGER MATERIEL_OUT
 AFTER INSERT ON Paniers
 FOR EACH ROW
@@ -135,7 +135,36 @@ BEGIN
 	set qte_stock=qte_stock-new.qte_mat
 	where ref_mat=new.ref_mat;
 END //
+DELIMITER ;
 
+drop trigger if exists MATERIEL_IN_insert;
+DELIMITER //
+create trigger MATERIEL_IN_insert
+after insert on Commandes_contrats
+for each row
+begin
+	if  new.date_fin<= curdate() then
+		update Materiels
+		set qte_stock=qte_stock+qte_mat
+		where ref_mat=(select ref_mat from Paniers
+		where ref_comct=new.ref_comct);
+	end if;
+end //
+DELIMITER ;
+
+drop trigger if exists MATERIEL_IN_update;
+DELIMITER //
+create trigger MATERIEL_IN_update
+after update on Commandes_contrats
+for each row
+begin
+	if  new.date_fin<= curdate() then
+		update Materiels
+		set qte_stock=qte_stock+qte_mat
+		where ref_mat=(select ref_mat from Paniers
+		where ref_comct=new.ref_comct);
+	end if;
+end //
 DELIMITER ;
 
 -- insertion des données
@@ -146,7 +175,8 @@ insert into Clients(ref_cli, code_ag) values
 	(1, 1);
 
 insert into Commandes_contrats(ref_comct, ref_cli) values
-	(1, 1);
+	(1, 1),
+	(2, 1);
 	
 insert into Categories(code_cat) values
 	(1);
@@ -160,12 +190,14 @@ insert into vehicules(code_cat) values
 insert into outillage(code_cat) values
 	(1);
 	
-insert into Materiels(ref_mat, code_cat) values
-	(1, 1); 
+insert into Materiels values
+	(1, 1, "truc", 20.33, "ceci est un machin", 100, 150.00),
+	(2, 1, "ekah", 41.65, "ceci est un cuab", 100, 150.00);
 
-insert into Paniers(ref_mat, ref_comct) values
-	(1, 1);
-
+insert into Paniers values -- ref contrat -> ref matériel -> qte matériels commandé
+	(1, 1, 10),
+	(2, 2, 30);
+/*
 insert into Techniciens(ref_tech) values
 	(1);
 
@@ -174,4 +206,10 @@ insert into Interventions(ref_inter) values
 
 insert into Plannings(ref_mat, ref_tech, ref_inter) values
 	(1, 1, 1);
+*/
+	
+-- autre modifications
+update Commandes_contrats
+set date_fin=CURRENT_DATE()
+where ref_comct=1;
 
